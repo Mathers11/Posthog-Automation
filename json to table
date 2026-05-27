@@ -1,0 +1,26 @@
+import json
+import pandas as pd
+
+with open(r'C:\Users\wupengya\Downloads\Individual_events_json.txt', 'r', encoding='utf-8') as f:
+    data = json.load(f)
+
+
+def flatten(d, prefix=''):
+    result = {}
+    for k, v in d.items():
+        key = f"{prefix}{k}" if prefix else k
+        if isinstance(v, dict):
+            result.update(flatten(v, key + '.'))
+        elif isinstance(v, list):
+            result[key] = ', '.join(str(i) for i in v)
+        else:
+            result[key] = v
+    return result
+
+flat = flatten(data)
+df = pd.DataFrame([flat])
+
+
+output = r'C:\Users\你的用户名\Downloads\Individual_events_output.xlsx'
+df.to_excel(output, index=False)
+print(output)
